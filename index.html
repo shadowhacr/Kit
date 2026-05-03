@@ -1,0 +1,2542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHADOW OFFICIAL 👑 TOOLKIT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+        
+        :root {
+            --neon-green: #00ff41;
+            --neon-cyan: #00f0ff;
+            --neon-red: #ff0040;
+            --neon-purple: #b026ff;
+            --dark-bg: #050505;
+            --darker: #0a0a0a;
+            --card-bg: rgba(10, 10, 15, 0.9);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15) 0px,
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        
+        /* ===== LOADING SCREEN ===== */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+        
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        /* CUSTOM DP STYLES */
+        .custom-dp-container {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin-bottom: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--neon-green);
+            box-shadow: 0 0 30px var(--neon-green), 0 0 60px rgba(0, 255, 65, 0.3);
+            animation: dpPulse 2s ease-in-out infinite;
+        }
+        
+        .custom-dp-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .custom-dp-container .dp-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 240, 255, 0.1));
+            color: var(--neon-green);
+            font-size: 3rem;
+        }
+        
+        @keyframes dpPulse {
+            0%, 100% { box-shadow: 0 0 30px var(--neon-green), 0 0 60px rgba(0, 255, 65, 0.3); }
+            50% { box-shadow: 0 0 40px var(--neon-cyan), 0 0 80px rgba(0, 240, 255, 0.4); }
+        }
+        
+        .loading-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            letter-spacing: 5px;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--neon-green);
+            animation: typing 2s steps(20) infinite alternate, blink 0.7s infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 280px; }
+        }
+        
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        
+        .loading-bar-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(0, 255, 65, 0.1);
+            border-radius: 2px;
+            margin-top: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+            width: 0%;
+            animation: loadProgress 3s ease-in-out forwards;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        
+        .loading-percentage {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+        
+        /* ===== PASSWORD SCREEN ===== */
+        #password-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            z-index: 9998;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        #password-screen.active {
+            display: flex;
+        }
+        
+        .password-container {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1), inset 0 0 30px rgba(0, 255, 65, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .password-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-cyan), var(--neon-purple), var(--neon-green));
+            border-radius: 20px;
+            z-index: -1;
+            animation: borderRotate 3s linear infinite;
+            opacity: 0.5;
+        }
+        
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+        
+        .lock-icon {
+            font-size: 4rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 20px var(--neon-green);
+            margin-bottom: 20px;
+            animation: lockFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes lockFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .password-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            margin-bottom: 10px;
+        }
+        
+        .password-subtitle {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 255, 65, 0.3);
+            border-radius: 12px;
+            color: var(--neon-green);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+        }
+        
+        .password-input:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+        }
+        
+        .password-input::placeholder {
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 1px;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.4);
+        }
+        
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .error-msg {
+            color: var(--neon-red);
+            text-shadow: 0 0 10px var(--neon-red);
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: none;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        /* ===== MAIN APP STYLES ===== */
+        .app-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+        
+        .app-container.active {
+            display: block;
+        }
+        
+        .app-header {
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .app-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+        
+        .app-logo .crown {
+            font-size: 1.3rem;
+            -webkit-text-fill-color: #ffd700;
+            background: none;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .notification-bell {
+            position: relative;
+            color: var(--neon-green);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .notification-bell:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 15px var(--neon-green);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-red);
+            color: #fff;
+            font-size: 0.6rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            animation: badgePulse 1s infinite;
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .logout-btn {
+            background: rgba(255, 0, 64, 0.2);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 0, 64, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 64, 0.3);
+        }
+        
+        .hero-section {
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 255, 65, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+        
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-subtitle {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .social-section {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 18px;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .social-btn:hover::before {
+            left: 100%;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            border-color: var(--neon-green);
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.2);
+        }
+        
+        .social-btn i {
+            font-size: 1.1rem;
+        }
+        
+        .social-btn.whatsapp { border-color: rgba(37, 211, 102, 0.3); }
+        .social-btn.whatsapp:hover { box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3); }
+        .social-btn.whatsapp i { color: #25d366; }
+        
+        .social-btn.youtube { border-color: rgba(255, 0, 0, 0.3); }
+        .social-btn.youtube:hover { box-shadow: 0 5px 20px rgba(255, 0, 0, 0.3); }
+        .social-btn.youtube i { color: #ff0000; }
+        
+        .social-btn.telegram { border-color: rgba(0, 136, 204, 0.3); }
+        .social-btn.telegram:hover { box-shadow: 0 5px 20px rgba(0, 136, 204, 0.3); }
+        .social-btn.telegram i { color: #0088cc; }
+        
+        .social-btn.community { border-color: rgba(0, 255, 65, 0.3); }
+        .social-btn.community:hover { box-shadow: 0 5px 20px rgba(0, 255, 65, 0.3); }
+        .social-btn.community i { color: var(--neon-green); }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--neon-green), transparent);
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 0 20px 20px;
+        }
+        
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: cardAppear 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--neon-green);
+            box-shadow: 0 20px 40px rgba(0, 255, 65, 0.15), 0 0 60px rgba(0, 255, 65, 0.05);
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.05), transparent);
+            transition: left 0.6s;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .tool-card:hover::before {
+            left: 100%;
+        }
+        
+        .tool-banner {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            position: relative;
+            transition: transform 0.4s;
+        }
+        
+        .tool-card:hover .tool-banner {
+            transform: scale(1.05);
+        }
+        
+        .tool-banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.9) 100%);
+            pointer-events: none;
+        }
+        
+        .tool-content {
+            padding: 15px 20px 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .tool-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        
+        .tool-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .tool-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tool-meta i {
+            color: var(--neon-green);
+        }
+        
+        .new-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, var(--neon-red), var(--neon-purple));
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 3;
+            animation: badgeGlow 2s infinite;
+        }
+        
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--neon-red); }
+            50% { box-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-red); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.3);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: rgba(0, 255, 65, 0.2);
+        }
+        
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            padding: 0 20px;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        .admin-tab {
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            border-radius: 12px;
+            color: rgba(255,255,255,0.6);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .admin-tab.active {
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            color: #000;
+            border-color: transparent;
+            font-weight: bold;
+        }
+        
+        .admin-tab:hover:not(.active) {
+            border-color: var(--neon-green);
+            color: #fff;
+        }
+        
+        .admin-content {
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .admin-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: var(--neon-green);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .form-input, .form-file-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 255, 65, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+        
+        .file-upload-area {
+            border: 2px dashed rgba(0, 255, 65, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .file-upload-area:hover {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 65, 0.05);
+        }
+        
+        .file-upload-area i {
+            font-size: 2.5rem;
+            color: var(--neon-green);
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-area p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+        
+        .file-upload-area input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .preview-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: none;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.4);
+        }
+        
+        .password-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .password-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .admin-tools-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .admin-tool-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .admin-tool-item:hover {
+            border-color: var(--neon-green);
+        }
+        
+        .admin-tool-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+        
+        .admin-tool-info {
+            flex: 1;
+        }
+        
+        .admin-tool-info h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        
+        .admin-tool-info p {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            word-break: break-all;
+        }
+        
+        .delete-btn {
+            background: rgba(255, 0, 64, 0.2);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            transition: all 0.3s;
+        }
+        
+        .delete-btn:hover {
+            background: rgba(255, 0, 64, 0.4);
+            box-shadow: 0 0 15px rgba(255, 0, 64, 0.3);
+        }
+        
+        /* SEND NOTIFICATION SECTION */
+        .send-notif-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .send-notif-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .notif-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .notif-type-btn {
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 255, 65, 0.2);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.6);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .notif-type-btn.active {
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            color: #000;
+            border-color: transparent;
+            font-weight: bold;
+        }
+        
+        .notif-type-btn:hover:not(.active) {
+            border-color: var(--neon-green);
+            color: #fff;
+        }
+        
+        .notification-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 10001;
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 1px solid rgba(0, 255, 65, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .notification-panel.open {
+            right: 0;
+        }
+        
+        .notif-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .notif-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            font-size: 1.2rem;
+        }
+        
+        .close-notif {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .notif-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .notif-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            animation: slideInRight 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .notif-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--neon-green), var(--neon-cyan));
+        }
+        
+        .notif-item.unread::before {
+            background: linear-gradient(to bottom, var(--neon-red), var(--neon-purple));
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .notif-item h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--neon-cyan);
+            margin-bottom: 5px;
+        }
+        
+        .notif-item p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .notif-time {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+            margin-top: 8px;
+        }
+        
+        .clear-all-btn {
+            margin: 15px;
+            padding: 12px;
+            background: rgba(255, 0, 64, 0.2);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+            border-radius: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .clear-all-btn:hover {
+            background: rgba(255, 0, 64, 0.4);
+        }
+        
+        .toast-container {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10002;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-green);
+            border-radius: 12px;
+            padding: 15px 25px;
+            color: #fff;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 65, 0.2);
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.6s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            pointer-events: auto;
+            max-width: 90vw;
+        }
+        
+        .toast.error {
+            border-color: var(--neon-red);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 0, 64, 0.2);
+        }
+        
+        .toast.success {
+            border-color: var(--neon-green);
+        }
+        
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(-20px) scale(0.9); }
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 255, 65, 0.2);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 0.65rem;
+            transition: all 0.3s;
+            padding: 5px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        
+        .nav-item i {
+            font-size: 1.3rem;
+        }
+        
+        .nav-item.active {
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        .nav-item:hover {
+            color: var(--neon-cyan);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        .glitch {
+            position: relative;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            animation: glitch-1 2s infinite;
+            color: var(--neon-red);
+            z-index: -1;
+        }
+        
+        .glitch::after {
+            animation: glitch-2 2s infinite;
+            color: var(--neon-cyan);
+            z-index: -2;
+        }
+        
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(40% 0 40% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(60% 0 20% 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(80% 0 0% 0); transform: translate(2px, -2px); }
+        }
+        
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(40% 0 40% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(20% 0 60% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(0% 0 80% 0); transform: translate(-2px, 2px); }
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 10s infinite;
+        }
+        
+        @keyframes particleFloat {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1); }
+        }
+        
+        @media (min-width: 768px) {
+            .tools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .app-logo {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .tools-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .app-container, .admin-panel, .notif-list {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .app-container::-webkit-scrollbar,
+        .admin-panel::-webkit-scrollbar,
+        .notif-list::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 255, 65, 0.3);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .cursor-blink::after {
+            content: '_';
+            animation: cursorBlink 1s infinite;
+            color: var(--neon-green);
+        }
+        
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* PUSH NOTIFICATION BANNER */
+        .push-banner {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border: 1px solid var(--neon-green);
+            border-radius: 16px;
+            padding: 20px 25px;
+            z-index: 10003;
+            display: none;
+            max-width: 90vw;
+            width: 380px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(0,255,65,0.2);
+            animation: pushSlideDown 0.5s ease;
+        }
+        
+        .push-banner.show {
+            display: block;
+        }
+        
+        @keyframes pushSlideDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-50px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        .push-banner-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .push-banner-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+        }
+        
+        .push-banner-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            font-size: 0.9rem;
+        }
+        
+        .push-banner-app {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .push-banner-body {
+            color: #fff;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        .push-banner-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="particles" id="particles"></div>
+    
+    <!-- ===== PUSH NOTIFICATION BANNER ===== -->
+    <div class="push-banner" id="pushBanner">
+        <button class="push-banner-close" onclick="closePushBanner()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="push-banner-header">
+            <div class="push-banner-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div>
+                <div class="push-banner-title" id="pushBannerTitle">Notification</div>
+                <div class="push-banner-app">SHADOW TOOLKIT</div>
+            </div>
+        </div>
+        <div class="push-banner-body" id="pushBannerBody">Message here...</div>
+    </div>
+    
+    <!-- ===== LOADING SCREEN ===== -->
+    <div id="loading-screen">
+        <div class="custom-dp-container" id="customDpContainer">
+            <div class="dp-placeholder" id="dpPlaceholder">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <img src="dp.png" alt="DP" id="customDpImg" style="display:none;" onerror="this.style.display='none';document.getElementById('dpPlaceholder').style.display='flex';">
+        </div>
+        <div class="loading-text">INITIALIZING...</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <div class="loading-percentage" id="loading-percent">0%</div>
+    </div>
+    
+    <!-- ===== PASSWORD SCREEN ===== -->
+    <div id="password-screen">
+        <div class="password-container">
+            <div class="lock-icon"><i class="fas fa-fingerprint"></i></div>
+            <div class="password-title glitch" data-text="AUTHENTICATION REQUIRED">AUTHENTICATION REQUIRED</div>
+            <div class="password-subtitle">Enter your access key to continue</div>
+            
+            <div class="password-input-wrapper">
+                <input type="password" class="password-input" id="passwordInput" placeholder="Enter Access Key..." autocomplete="off">
+                <span class="toggle-password" onclick="togglePassword()">
+                    <i class="fas fa-eye" id="eyeIcon"></i>
+                </span>
+            </div>
+            
+            <button class="login-btn" onclick="checkPassword()">
+                <i class="fas fa-unlock-alt"></i> ACCESS
+            </button>
+            
+            <div class="error-msg" id="errorMsg">
+                <i class="fas fa-exclamation-triangle"></i> Invalid Access Key!
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== USER PANEL ===== -->
+    <div class="app-container" id="userPanel">
+        <div class="app-header">
+            <div class="app-logo">SHADOW <span class="crown">👑</span> TOOLKIT</div>
+            <div class="header-actions">
+                <div class="notification-bell" onclick="openNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge" style="display:none">0</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="hero-section">
+            <div class="hero-glow"></div>
+            <h1 class="hero-title">SHADOW TOOLKIT</h1>
+            <p class="hero-subtitle">Premium Tools & Resources</p>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalTools">0</div>
+                    <div class="stat-label">Tools</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalDownloads">0</div>
+                    <div class="stat-label">Downloads</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Power</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="social-section">
+            <a href="https://wa.me/923001234567" class="social-btn whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="https://youtube.com/@yourchannel" class="social-btn youtube" target="_blank">
+                <i class="fab fa-youtube"></i> YouTube
+            </a>
+            <a href="https://t.me/yourchannel" class="social-btn telegram" target="_blank">
+                <i class="fab fa-telegram"></i> Telegram
+            </a>
+            <a href="https://chat.whatsapp.com/your-community-link" class="social-btn community" target="_blank">
+                <i class="fas fa-users"></i> Community
+            </a>
+        </div>
+        
+        <div class="section-title">
+            <i class="fas fa-tools"></i> AVAILABLE TOOLS
+        </div>
+        
+        <div class="tools-grid" id="userToolsGrid">
+            <div class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <p>No tools available yet.<br>Check back later!</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== ADMIN PANEL ===== -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="app-header">
+            <div class="app-logo">ADMIN <span class="crown">👑</span> PANEL</div>
+            <div class="header-actions">
+                <div class="notification-bell" onclick="openNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="adminNotifBadge" style="display:none">0</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="hero-section" style="padding: 20px;">
+            <h1 class="hero-title" style="font-size: 1.5rem;">ADMIN DASHBOARD</h1>
+            <p class="hero-subtitle">Manage your toolkit</p>
+        </div>
+        
+        <div class="admin-tabs">
+            <div class="admin-tab active" onclick="switchTab('addTool')">
+                <i class="fas fa-plus-circle"></i> Add Tool
+            </div>
+            <div class="admin-tab" onclick="switchTab('manageTools')">
+                <i class="fas fa-list"></i> Manage Tools
+            </div>
+            <div class="admin-tab" onclick="switchTab('sendNotif')">
+                <i class="fas fa-paper-plane"></i> Send Notif
+            </div>
+            <div class="admin-tab" onclick="switchTab('passwords')">
+                <i class="fas fa-key"></i> Passwords
+            </div>
+        </div>
+        
+        <div class="admin-content active" id="tab-addTool">
+            <div class="password-card">
+                <h3><i class="fas fa-upload"></i> ADD NEW TOOL</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Tool Banner Image</label>
+                    <div class="file-upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click or drag image here</p>
+                        <input type="file" id="toolImage" accept="image/*" onchange="previewImage(event)">
+                    </div>
+                    <img class="preview-image" id="previewImg" alt="Preview">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tool Title</label>
+                    <input type="text" class="form-input" id="toolTitle" placeholder="Enter tool name...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">MediaFire / Download Link</label>
+                    <input type="text" class="form-input" id="toolLink" placeholder="https://www.mediafire.com/...">
+                </div>
+                
+                <button class="submit-btn" onclick="addTool()">
+                    <i class="fas fa-rocket"></i> UPLOAD TOOL
+                </button>
+            </div>
+        </div>
+        
+        <div class="admin-content" id="tab-manageTools">
+            <div class="section-title">
+                <i class="fas fa-folder-open"></i> ALL TOOLS
+            </div>
+            <div class="admin-tools-list" id="adminToolsList">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>No tools added yet.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-content" id="tab-sendNotif">
+            <div class="send-notif-card">
+                <h3><i class="fas fa-broadcast-tower"></i> SEND NOTIFICATION TO ALL USERS</h3>
+                
+                <div class="notif-type-selector">
+                    <button class="notif-type-btn active" onclick="selectNotifType('normal')">
+                        <i class="fas fa-bell"></i> Normal
+                    </button>
+                    <button class="notif-type-btn" onclick="selectNotifType('urgent')">
+                        <i class="fas fa-exclamation-circle"></i> Urgent
+                    </button>
+                    <button class="notif-type-btn" onclick="selectNotifType('update')">
+                        <i class="fas fa-sync"></i> Update
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notification Title</label>
+                    <input type="text" class="form-input" id="notifTitle" placeholder="Enter notification title...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notification Message</label>
+                    <textarea class="form-input" id="notifMessage" rows="4" placeholder="Type your message here..." style="resize: none;"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="pushNotifCheckbox" style="width: auto;">
+                        <span>Send as Push Notification (Shows in mobile notification bar like WhatsApp)</span>
+                    </label>
+                </div>
+                
+                <button class="submit-btn" onclick="sendNotification()">
+                    <i class="fas fa-paper-plane"></i> SEND TO ALL USERS
+                </button>
+            </div>
+            
+            <div class="send-notif-card">
+                <h3><i class="fas fa-history"></i> SENT NOTIFICATIONS HISTORY</h3>
+                <div id="sentNotifHistory">
+                    <div class="empty-state" style="padding: 30px;">
+                        <i class="fas fa-envelope-open"></i>
+                        <p>No notifications sent yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-content" id="tab-passwords">
+            <div class="password-card">
+                <h3><i class="fas fa-user-shield"></i> USER PANEL PASSWORD</h3>
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-input" id="currentUserPass" placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-input" id="newUserPass" placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-input" id="confirmUserPass" placeholder="Confirm new password">
+                </div>
+                <button class="submit-btn" onclick="changePassword('user')">
+                    <i class="fas fa-save"></i> UPDATE USER PASSWORD
+                </button>
+            </div>
+            
+            <div class="password-card">
+                <h3><i class="fas fa-user-cog"></i> ADMIN PANEL PASSWORD</h3>
+                <div class="form-group">
+                    <label class="form-label">Current Password</label>
+                    <input type="password" class="form-input" id="currentAdminPass" placeholder="Enter current password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" class="form-input" id="newAdminPass" placeholder="Enter new password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-input" id="confirmAdminPass" placeholder="Confirm new password">
+                </div>
+                <button class="submit-btn" onclick="changePassword('admin')">
+                    <i class="fas fa-save"></i> UPDATE ADMIN PASSWORD
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== NOTIFICATION PANEL ===== -->
+    <div class="overlay" id="overlay" onclick="closeNotifications()"></div>
+    <div class="notification-panel" id="notificationPanel">
+        <div class="notif-header">
+            <h2><i class="fas fa-bell"></i> NOTIFICATIONS</h2>
+            <button class="close-notif" onclick="closeNotifications()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notif-list" id="notifList"></div>
+        <button class="clear-all-btn" onclick="clearAllNotifications()">
+            <i class="fas fa-trash-alt"></i> CLEAR ALL
+        </button>
+    </div>
+    
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- ===== BOTTOM NAV ===== -->
+    <div class="bottom-nav" id="userBottomNav" style="display:none">
+        <div class="nav-item active" onclick="scrollToSection('userToolsGrid')">
+            <i class="fas fa-home"></i><span>Home</span>
+        </div>
+        <div class="nav-item" onclick="openNotifications()">
+            <i class="fas fa-bell"></i><span>Alerts</span>
+        </div>
+        <div class="nav-item" onclick="scrollToTop()">
+            <i class="fas fa-arrow-up"></i><span>Top</span>
+        </div>
+    </div>
+    
+    <div class="bottom-nav" id="adminBottomNav" style="display:none">
+        <div class="nav-item active" onclick="switchTab('addTool')">
+            <i class="fas fa-plus"></i><span>Add</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('manageTools')">
+            <i class="fas fa-list"></i><span>Tools</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('sendNotif')">
+            <i class="fas fa-paper-plane"></i><span>Notif</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('passwords')">
+            <i class="fas fa-key"></i><span>Pass</span>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        // LOCAL DP PATH - Same folder mein "dp.png" ya "dp.jpg" rakho
+        const LOCAL_DP_PATH = "dp.png"; // Ya "dp.jpg" agar JPG hai toh
+        
+        // DEFAULT PASSWORDS
+        let USER_PASSWORD = "shadow55";
+        let ADMIN_PASSWORD = "r749926n";
+        
+        // SOCIAL LINKS
+        const SOCIAL_LINKS = {
+            whatsapp: "https://wa.me/923709515870",
+            youtube: "https://youtube.com/@ShadowHERE.460",
+            telegram: "https://t.me/ssbugchannel",
+            community: "https://chat.whatsapp.com/EdtVcLNT3dfEwZuoqHdm98"
+        };
+        
+        // ===== STATE =====
+        let tools = [];
+        let notifications = [];
+        let sentNotifications = [];
+        let currentUser = null;
+        let unreadCount = 0;
+        let currentNotifType = 'normal';
+        let isHopWebApp = false;
+        
+        // ===== CHECK IF RUNNING IN HOPWEB APP =====
+        function checkHopWeb() {
+            // HopWeb injects window.HopWeb object
+            if (typeof window.HopWeb !== 'undefined' || typeof HopWeb !== 'undefined') {
+                isHopWebApp = true;
+                console.log("HopWeb App detected");
+            }
+            // Alternative check for Android WebView
+            if (window.Android !== undefined || window.android !== undefined) {
+                isHopWebApp = true;
+                console.log("Android WebView detected");
+            }
+        }
+        
+        // ===== INITIALIZATION =====
+        window.onload = function() {
+            checkHopWeb();
+            initMatrixRain();
+            initParticles();
+            startLoading();
+            loadFromStorage();
+            updateSocialLinks();
+            setupLocalDP();
+        };
+        
+        // ===== LOCAL DP SETUP =====
+        function setupLocalDP() {
+            const dpImg = document.getElementById('customDpImg');
+            const dpPlaceholder = document.getElementById('dpPlaceholder');
+            
+            // Try to load local image
+            dpImg.src = LOCAL_DP_PATH;
+            dpImg.onload = function() {
+                dpImg.style.display = 'block';
+                dpPlaceholder.style.display = 'none';
+                console.log("Local DP loaded successfully");
+            };
+            dpImg.onerror = function() {
+                // Try jpg if png fails
+                if (LOCAL_DP_PATH.endsWith('.png')) {
+                    dpImg.src = LOCAL_DP_PATH.replace('.png', '.jpg');
+                } else if (LOCAL_DP_PATH.endsWith('.jpg')) {
+                    dpImg.src = LOCAL_DP_PATH.replace('.jpg', '.png');
+                } else {
+                    dpImg.style.display = 'none';
+                    dpPlaceholder.style.display = 'flex';
+                }
+            };
+        }
+        
+        function updateSocialLinks() {
+            const socialBtns = document.querySelectorAll('.social-btn');
+            socialBtns[0].href = SOCIAL_LINKS.whatsapp;
+            socialBtns[1].href = SOCIAL_LINKS.youtube;
+            socialBtns[2].href = SOCIAL_LINKS.telegram;
+            socialBtns[3].href = SOCIAL_LINKS.community;
+        }
+        
+        // ===== HOPWEB NATIVE NOTIFICATION =====
+        function sendHopWebNotification(title, message) {
+            try {
+                // Method 1: HopWeb native bridge
+                if (typeof window.HopWeb !== 'undefined' && window.HopWeb.showNotification) {
+                    window.HopWeb.showNotification(title, message);
+                    return true;
+                }
+                
+                // Method 2: Alternative HopWeb syntax
+                if (typeof HopWeb !== 'undefined' && HopWeb.showNotification) {
+                    HopWeb.showNotification(title, message);
+                    return true;
+                }
+                
+                // Method 3: Android WebView interface
+                if (typeof window.Android !== 'undefined' && window.Android.showNotification) {
+                    window.Android.showNotification(title, message);
+                    return true;
+                }
+                
+                // Method 4: Generic WebView bridge
+                if (window.android && window.android.showToast) {
+                    window.android.showToast(title + ": " + message);
+                    return true;
+                }
+                
+                return false;
+            } catch (e) {
+                console.log("Native notification failed:", e);
+                return false;
+            }
+        }
+        
+        // ===== LOADING SCREEN =====
+        function startLoading() {
+            let percent = 0;
+            const percentEl = document.getElementById('loading-percent');
+            const interval = setInterval(() => {
+                percent += Math.floor(Math.random() * 15) + 5;
+                if (percent >= 100) {
+                    percent = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('loading-screen').classList.add('hidden');
+                        document.getElementById('password-screen').classList.add('active');
+                    }, 500);
+                }
+                percentEl.textContent = percent + '%';
+            }, 200);
+        }
+        
+        // ===== MATRIX RAIN =====
+        function initMatrixRain() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            
+            const chars = '01';
+            const fontSize = 14;
+            const columns = Math.floor(canvas.width / fontSize);
+            const drops = Array(columns).fill(1);
+            
+            function draw() {
+                ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#00ff41';
+                ctx.font = fontSize + 'px monospace';
+                
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            setInterval(draw, 35);
+        }
+        
+        // ===== PARTICLES =====
+        function initParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        
+        // ===== PASSWORD FUNCTIONS =====
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (input === USER_PASSWORD) {
+                currentUser = 'user';
+                showPanel('user');
+                showToast('Welcome to User Panel!', 'success');
+            } else if (input === ADMIN_PASSWORD) {
+                currentUser = 'admin';
+                showPanel('admin');
+                showToast('Welcome Admin!', 'success');
+            } else {
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                showToast('Invalid Access Key!', 'error');
+            }
+        }
+        
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+        
+        // ===== PANEL SWITCHING =====
+        function showPanel(type) {
+            document.getElementById('password-screen').classList.remove('active');
+            
+            if (type === 'user') {
+                document.getElementById('userPanel').classList.add('active');
+                document.getElementById('userBottomNav').style.display = 'flex';
+                document.getElementById('adminBottomNav').style.display = 'none';
+                renderUserTools();
+            } else {
+                document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('userBottomNav').style.display = 'none';
+                document.getElementById('adminBottomNav').style.display = 'flex';
+                renderAdminTools();
+                renderSentNotifHistory();
+            }
+            
+            updateStats();
+        }
+        
+        function logout() {
+            currentUser = null;
+            document.getElementById('userPanel').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
+            document.getElementById('password-screen').classList.add('active');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('userBottomNav').style.display = 'none';
+            document.getElementById('adminBottomNav').style.display = 'none';
+        }
+        
+        // ===== ADMIN TABS =====
+        function switchTab(tabName) {
+            document.querySelectorAll('.admin-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.closest('.admin-tab').classList.add('active');
+            
+            if (tabName === 'manageTools') {
+                renderAdminTools();
+            } else if (tabName === 'sendNotif') {
+                renderSentNotifHistory();
+            }
+        }
+        
+        // ===== NOTIFICATION TYPE SELECTOR =====
+        function selectNotifType(type) {
+            currentNotifType = type;
+            document.querySelectorAll('.notif-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.notif-type-btn').classList.add('active');
+        }
+        
+        // ===== SEND NOTIFICATION =====
+        function sendNotification() {
+            const title = document.getElementById('notifTitle').value.trim();
+            const message = document.getElementById('notifMessage').value.trim();
+            const isPush = document.getElementById('pushNotifCheckbox').checked;
+            
+            if (!title || !message) {
+                showToast('Please fill title and message!', 'error');
+                return;
+            }
+            
+            const notifData = {
+                id: Date.now(),
+                title: title,
+                message: message,
+                type: currentNotifType,
+                time: new Date().toLocaleString(),
+                push: isPush
+            };
+            
+            // Add to sent history
+            sentNotifications.unshift(notifData);
+            
+            // Add to user notifications
+            const userNotif = {
+                id: Date.now(),
+                title: title,
+                message: message,
+                time: new Date().toLocaleString(),
+                read: false,
+                type: currentNotifType
+            };
+            
+            notifications.unshift(userNotif);
+            unreadCount++;
+            
+            // SHOW PUSH NOTIFICATION
+            if (isPush) {
+                // Try HopWeb native notification first
+                const nativeSent = sendHopWebNotification(title, message);
+                
+                // If not in HopWeb, show in-app banner
+                if (!nativeSent) {
+                    showPushNotification(title, message);
+                }
+                
+                // Also try browser notification as fallback
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('SHADOW TOOLKIT', {
+                        body: title + ': ' + message,
+                        icon: 'dp.png',
+                        badge: 'dp.png',
+                        tag: 'shadow-' + Date.now(),
+                        requireInteraction: true
+                    });
+                }
+            }
+            
+            saveToStorage();
+            updateNotificationBadge();
+            renderSentNotifHistory();
+            
+            // Clear form
+            document.getElementById('notifTitle').value = '';
+            document.getElementById('notifMessage').value = '';
+            document.getElementById('pushNotifCheckbox').checked = false;
+            
+            showToast('Notification sent to all users!', 'success');
+        }
+        
+        // ===== PUSH NOTIFICATION BANNER =====
+        function showPushNotification(title, message) {
+            const banner = document.getElementById('pushBanner');
+            document.getElementById('pushBannerTitle').textContent = title;
+            document.getElementById('pushBannerBody').textContent = message;
+            
+            banner.classList.add('show');
+            
+            // Vibrate if supported
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);
+            }
+            
+            setTimeout(() => {
+                closePushBanner();
+            }, 8000);
+        }
+        
+        function closePushBanner() {
+            document.getElementById('pushBanner').classList.remove('show');
+        }
+        
+        // ===== RENDER SENT NOTIFICATIONS HISTORY =====
+        function renderSentNotifHistory() {
+            const container = document.getElementById('sentNotifHistory');
+            
+            if (sentNotifications.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding: 30px;">
+                        <i class="fas fa-envelope-open"></i>
+                        <p>No notifications sent yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = sentNotifications.map(n => {
+                let typeIcon = 'fa-bell';
+                let typeColor = 'var(--neon-green)';
+                if (n.type === 'urgent') {
+                    typeIcon = 'fa-exclamation-circle';
+                    typeColor = 'var(--neon-red)';
+                } else if (n.type === 'update') {
+                    typeIcon = 'fa-sync';
+                    typeColor = 'var(--neon-cyan)';
+                }
+                
+                return `
+                    <div class="admin-tool-item" style="margin-bottom: 10px;">
+                        <div class="admin-tool-info" style="flex: 1;">
+                            <h4 style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fas ${typeIcon}" style="color: ${typeColor};"></i>
+                                ${n.title}
+                            </h4>
+                            <p>${n.message}</p>
+                            <p style="margin-top: 5px; font-size: 0.7rem;">
+                                <i class="fas fa-clock"></i> ${n.time} 
+                                ${n.push ? '<span style="color: var(--neon-green); margin-left: 10px;"><i class="fas fa-mobile-alt"></i> Push Sent</span>' : ''}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // ===== TOOL MANAGEMENT =====
+        let tempImageBase64 = '';
+        
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempImageBase64 = e.target.result;
+                    const preview = document.getElementById('previewImg');
+                    preview.src = tempImageBase64;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function addTool() {
+            const title = document.getElementById('toolTitle').value.trim();
+            const link = document.getElementById('toolLink').value.trim();
+            
+            if (!title || !link || !tempImageBase64) {
+                showToast('Please fill all fields and upload an image!', 'error');
+                return;
+            }
+            
+            const tool = {
+                id: Date.now(),
+                title: title,
+                link: link,
+                image: tempImageBase64,
+                date: new Date().toLocaleDateString(),
+                downloads: 0,
+                isNew: true
+            };
+            
+            tools.unshift(tool);
+            saveToStorage();
+            
+            document.getElementById('toolTitle').value = '';
+            document.getElementById('toolLink').value = '';
+            document.getElementById('previewImg').style.display = 'none';
+            document.getElementById('toolImage').value = '';
+            tempImageBase64 = '';
+            
+            addNotification('New Tool Added!', 'Tool "' + title + '" has been added to the toolkit.');
+            
+            showToast('Tool uploaded successfully!', 'success');
+            renderAdminTools();
+        }
+        
+        function deleteTool(id) {
+            if (confirm('Are you sure you want to delete this tool?')) {
+                tools = tools.filter(t => t.id !== id);
+                saveToStorage();
+                renderAdminTools();
+                showToast('Tool deleted!', 'success');
+            }
+        }
+        
+        function renderUserTools() {
+            const grid = document.getElementById('userToolsGrid');
+            
+            if (tools.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <p>No tools available yet.<br>Check back later!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = tools.map((tool, index) => `
+                <div class="tool-card" onclick="openToolLink(${tool.id})" style="animation-delay: ${index * 0.1}s">
+                    ${tool.isNew ? '<div class="new-badge">NEW</div>' : ''}
+                    <div style="position: relative; overflow: hidden;">
+                        <img src="${tool.image}" class="tool-banner" alt="${tool.title}">
+                        <div class="tool-banner-overlay"></div>
+                    </div>
+                    <div class="tool-content">
+                        <div class="tool-title">${tool.title}</div>
+                        <div class="tool-meta">
+                            <span><i class="fas fa-calendar"></i> ${tool.date}</span>
+                            <span><i class="fas fa-download"></i> ${tool.downloads || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderAdminTools() {
+            const list = document.getElementById('adminToolsList');
+            
+            if (tools.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No tools added yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = tools.map(tool => `
+                <div class="admin-tool-item">
+                    <img src="${tool.image}" class="admin-tool-img" alt="${tool.title}">
+                    <div class="admin-tool-info">
+                        <h4>${tool.title}</h4>
+                        <p>${tool.link}</p>
+                        <p style="margin-top: 5px;"><i class="fas fa-download"></i> ${tool.downloads || 0} downloads | <i class="fas fa-calendar"></i> ${tool.date}</p>
+                    </div>
+                    <button class="delete-btn" onclick="deleteTool(${tool.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function openToolLink(id) {
+            const tool = tools.find(t => t.id === id);
+            if (tool) {
+                tool.downloads = (tool.downloads || 0) + 1;
+                tool.isNew = false;
+                saveToStorage();
+                updateStats();
+                window.open(tool.link, '_blank');
+            }
+        }
+        
+        // ===== PASSWORD CHANGE =====
+        function changePassword(type) {
+            const currentPass = type === 'user' ? document.getElementById('currentUserPass').value : document.getElementById('currentAdminPass').value;
+            const newPass = type === 'user' ? document.getElementById('newUserPass').value : document.getElementById('newAdminPass').value;
+            const confirmPass = type === 'user' ? document.getElementById('confirmUserPass').value : document.getElementById('confirmAdminPass').value;
+            
+            const correctCurrent = type === 'user' ? USER_PASSWORD : ADMIN_PASSWORD;
+            
+            if (currentPass !== correctCurrent) {
+                showToast('Current password is incorrect!', 'error');
+                return;
+            }
+            
+            if (newPass !== confirmPass) {
+                showToast('New passwords do not match!', 'error');
+                return;
+            }
+            
+            if (newPass.length < 4) {
+                showToast('Password must be at least 4 characters!', 'error');
+                return;
+            }
+            
+            if (type === 'user') {
+                USER_PASSWORD = newPass;
+            } else {
+                ADMIN_PASSWORD = newPass;
+            }
+            
+            saveToStorage();
+            
+            if (type === 'user') {
+                document.getElementById('currentUserPass').value = '';
+                document.getElementById('newUserPass').value = '';
+                document.getElementById('confirmUserPass').value = '';
+            } else {
+                document.getElementById('currentAdminPass').value = '';
+                document.getElementById('newAdminPass').value = '';
+                document.getElementById('confirmAdminPass').value = '';
+            }
+            
+            showToast(type + ' password updated successfully!', 'success');
+        }
+        
+        // ===== NOTIFICATIONS =====
+        function addNotification(title, message) {
+            const notif = {
+                id: Date.now(),
+                title: title,
+                message: message,
+                time: new Date().toLocaleString(),
+                read: false
+            };
+            
+            notifications.unshift(notif);
+            unreadCount++;
+            updateNotificationBadge();
+            saveToStorage();
+        }
+        
+        function updateNotificationBadge() {
+            const badges = document.querySelectorAll('.notification-badge');
+            badges.forEach(badge => {
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            });
+        }
+        
+        function openNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            const overlay = document.getElementById('overlay');
+            const list = document.getElementById('notifList');
+            
+            unreadCount = 0;
+            updateNotificationBadge();
+            notifications.forEach(n => n.read = true);
+            saveToStorage();
+            
+            if (notifications.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state" style="padding: 40px 20px;">
+                        <i class="fas fa-bell-slash"></i>
+                        <p>No notifications yet.</p>
+                    </div>
+                `;
+            } else {
+                list.innerHTML = notifications.map(n => {
+                    let typeIcon = 'fa-bell';
+                    let typeColor = 'var(--neon-green)';
+                    if (n.type === 'urgent') {
+                        typeIcon = 'fa-exclamation-circle';
+                        typeColor = 'var(--neon-red)';
+                    } else if (n.type === 'update') {
+                        typeIcon = 'fa-sync';
+                        typeColor = 'var(--neon-cyan)';
+                    }
+                    
+                    return `
+                        <div class="notif-item ${!n.read ? 'unread' : ''}">
+                            <h4 style="display: flex; align-items: center; gap: 8px;">
+                                <i class="fas ${typeIcon}" style="color: ${typeColor};"></i>
+                                ${n.title}
+                            </h4>
+                            <p>${n.message}</p>
+                            <div class="notif-time"><i class="fas fa-clock"></i> ${n.time}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            panel.classList.add('open');
+            overlay.classList.add('active');
+        }
+        
+        function closeNotifications() {
+            document.getElementById('notificationPanel').classList.remove('open');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        function clearAllNotifications() {
+            notifications = [];
+            unreadCount = 0;
+            updateNotificationBadge();
+            saveToStorage();
+            closeNotifications();
+            showToast('All notifications cleared!', 'success');
+        }
+        
+        // ===== TOAST =====
+        function showToast(message, type) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            
+            const icon = type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle';
+            toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        // ===== STATS =====
+        function updateStats() {
+            document.getElementById('totalTools').textContent = tools.length;
+            const totalDownloads = tools.reduce((sum, t) => sum + (t.downloads || 0), 0);
+            document.getElementById('totalDownloads').textContent = totalDownloads;
+        }
+        
+        // ===== SCROLL =====
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function scrollToTop() {
+            document.querySelector('.app-container.active').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // ===== LOCAL STORAGE =====
+        function saveToStorage() {
+            const data = {
+                tools: tools,
+                notifications: notifications,
+                sentNotifications: sentNotifications,
+                userPassword: USER_PASSWORD,
+                adminPassword: ADMIN_PASSWORD
+            };
+            localStorage.setItem('shadowToolkitData', JSON.stringify(data));
+        }
+        
+        function loadFromStorage() {
+            const saved = localStorage.getItem('shadowToolkitData');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.tools) tools = data.tools;
+                    if (data.notifications) notifications = data.notifications;
+                    if (data.sentNotifications) sentNotifications = data.sentNotifications;
+                    if (data.userPassword) USER_PASSWORD = data.userPassword;
+                    if (data.adminPassword) ADMIN_PASSWORD = data.adminPassword;
+                    
+                    unreadCount = notifications.filter(n => !n.read).length;
+                    updateNotificationBadge();
+                } catch (e) {
+                    console.log('Error loading data:', e);
+                }
+            }
+        }
+        
+        // ===== RIPPLE EFFECT =====
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.tool-card') || e.target.closest('.login-btn') || e.target.closest('.submit-btn')) {
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                ripple.style.left = e.clientX + 'px';
+                ripple.style.top = e.clientY + 'px';
+                document.body.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+    </script>
+</body>
+</html>
